@@ -1,0 +1,32 @@
+#login-container {
+  height: 100vh !important;
+}
+
+#loader-container {
+  height: 70vh !important;
+}
+
+.spinner-border {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.react-tel-input .form-control {
+  width: 100% !important;
+}
+
+tr {
+  font-size: 12px !important;
+}
+
+@media print {
+  @page {
+    size: A6 !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .toggle-sidebar-btn {
+    display: block !important;
+  }
+}
