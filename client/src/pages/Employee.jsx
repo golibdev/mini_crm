@@ -308,9 +308,9 @@ const UpdateEmployee = ({ position, positions, id }) => {
                      ))}
                   </select>
                </div>
-               <button className='btn btn-primary d-block'>
-                  <i className='fas fa-plus-circle me-2'></i>
-                  Ro'yxatdan o'tkazish
+               <button className='btn btn-success d-block'>
+                  <i className='fas fa-pen me-2'></i>
+                  Saqlash
                </button>
             </form>
          </div>

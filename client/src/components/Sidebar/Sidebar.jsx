@@ -24,6 +24,11 @@ export const Sidebar = ({ toggle, clickToggle }) => {
          title: "Sub kategoriyalar",
          link: '/admin/subcategories',
          icon: 'fas fa-list-alt'
+      },
+      {
+         title: "Lavozimlar",
+         link: '/admin/positions',
+         icon: 'fas fa-briefcase'
       }
    ]
    return (

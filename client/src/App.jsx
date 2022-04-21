@@ -3,6 +3,7 @@ import { AppLayout } from './layouts/AppLayout'
 import { Category } from './pages/Category'
 import { Employee } from './pages/Employee'
 import { Login } from './pages/Login'
+import { Position } from './pages/Position'
 import { SubCategory } from './pages/SubCategory'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path='/admin/employees' element={<Employee/>} />
           <Route path='/admin/categories' element={<Category/>} />
           <Route path='/admin/subcategories' element={<SubCategory/>} />
+          <Route path='/admin/positions' element={<Position/>} />
         </Route>
       </Routes>
     </BrowserRouter>
