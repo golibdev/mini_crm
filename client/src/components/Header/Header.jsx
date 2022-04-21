@@ -10,8 +10,9 @@ export const Header = ({ clickToggle }) => {
 
          <div className="d-flex align-items-center justify-content-between">
             <Link to="/admin" className="logo d-flex align-items-center">
-               {/* <img src="/assets/img/logo.png" alt="" /> */}
-               <span className="d-block d-lg-block">Effect.Uz</span>
+               <span className="fw-bold text-uppercase d-none d-lg-block">
+                  effect.uz
+               </span>
             </Link>
             <i className="fas fa-bars toggle-sidebar-btn text-primary" style={{ fontSize: '25px' }} onClick={clickToggle} ></i>
          </div>
