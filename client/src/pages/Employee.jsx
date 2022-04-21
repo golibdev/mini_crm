@@ -57,7 +57,7 @@ export const Employee = () => {
                   <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                      <i className='fas fa-plus-circle'></i>
                   </button>
-                  <RegisterEmployee positions={positions} />
+                  <RegisterEmployee positions={positions} getAll={getAll} />
                </div>
                <div className="row">
                   <div className="col-12">
@@ -149,7 +149,7 @@ const EmployeeList = ({ currentData, deleteEmployee, positions }) => {
    )
 }
 
-const RegisterEmployee = ({ positions }) => {
+const RegisterEmployee = ({ positions, getAll }) => {
    const [fullName, setFullName] = useState('')
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
@@ -179,17 +179,12 @@ const RegisterEmployee = ({ positions }) => {
       try {
          const res = await employeeApi.create(params)
 
-         if(res.status === 201) {
-            toast.success(res.data.message)
-            setFullName('')
-            setUsername('')
-            setPassword('')
-            setPositionId('')
-         }
-
-         setTimeout(() => {
-            window.location.reload()
-         }, 1500);
+         itoast.success(res.data.message)
+         setFullName('')
+         setUsername('')
+         setPassword('')
+         setPositionId('')
+         getAll()
       } catch (err) {
          console.log(err.response);
          toast.error('Xatolik!')
