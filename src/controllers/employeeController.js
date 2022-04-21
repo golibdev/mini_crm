@@ -106,7 +106,7 @@ exports.getAll = async (req, res) => {
          })
       }
 
-      return res.status(200).json({
+      res.status(200).json({
          message: 'Get employees successful',
          employees
       })
@@ -127,7 +127,7 @@ exports.getOne = async (req, res) => {
          })
       }
 
-      return res.status(200).json({
+      res.status(200).json({
          message: 'Get employee successful',
          employee
       })
@@ -141,6 +141,12 @@ exports.update = async (req, res) => {
       const id = req.params.id;
 
       const employee = await Employee.findById(id);
+      const {
+         fullName,
+         username,
+         positionId,
+         password
+      } = req.body;
 
       if(!employee) {
          return res.status(404).json({
@@ -148,7 +154,7 @@ exports.update = async (req, res) => {
          })
       }
 
-      if(req.body.password) {
+      if(req.body.password !== "") {
          const encryptedPassword = CryptoJS.AES.encrypt(
             req.body.password,
             process.env.PASSWORD_SECRET_KEY
@@ -174,15 +180,33 @@ exports.update = async (req, res) => {
             }
          })
 
-         await Employee.findByIdAndUpdate(id, req.body)
+         if(req.body.password !== "") {
+            await Employee.findByIdAndUpdate(id, req.body)
+         } else {
+            await Employee.findByIdAndUpdate(id, {
+               username,
+               fullName,
+               positionId
+            })
+         }
 
          return res.status(200).json({
             message: 'Update employee successful'
          })
       } 
 
-      await Employee.findByIdAndUpdate(id, {
-         ...req.body
+      if(req.body.password !== "") {
+         await Employee.findByIdAndUpdate(id, req.body)
+      } else {
+         await Employee.findByIdAndUpdate(id, {
+            username,
+            fullName,
+            positionId
+         })
+      }
+
+      res.status(200).json({
+         message: "Update employee successful"
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
@@ -214,7 +238,7 @@ exports.delete = async (req, res) => {
 
       await Employee.findByIdAndDelete(id);
 
-      return res.status(200).json({
+      res.status(200).json({
          message: 'Delete employee successful'
       })
    } catch (err) {

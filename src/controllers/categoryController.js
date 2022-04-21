@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ categories })
+      res.status(200).json({ categories })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -28,7 +28,7 @@ exports.getOne = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ category })
+      res.status(200).json({ category })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -48,7 +48,7 @@ exports.create = async (req, res) => {
 
       const newCategory = await Category.create(req.body);
 
-      return res.status(201).json({ 
+      res.status(201).json({ 
          message: 'Category created',
          category: newCategory
       })
@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
 
       const updatedCategory = await Category.findByIdAndUpdate(id, req.body, { new: true });
 
-      return res.status(200).json({
+      res.status(200).json({
          message: 'Category updated',
          category: updatedCategory
       })
@@ -106,7 +106,7 @@ exports.delete = async (req, res) => {
 
       await Category.findByIdAndDelete(id);
 
-      return res.status(200).json({
+      res.status(200).json({
          message: 'Category deleted'
       })
    } catch (err) {

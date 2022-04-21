@@ -1,9 +1,9 @@
 const token = localStorage.getItem('token');
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:4000/api/employee/';
+const baseUrl = 'http://localhost:4000/api/position/';
 
-export const employeeApi = {
+export const positionApi = {
    getAll: () => axios.get(
       baseUrl,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -13,7 +13,7 @@ export const employeeApi = {
       { headers: { Authorization: `Bearer ${token}` } }
    ),
    create: (params) => axios.post(
-      baseUrl+'register', 
+      baseUrl,
       params,
       { headers: { Authorization: `Bearer ${token}` } }
    ),

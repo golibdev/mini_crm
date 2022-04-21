@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ positions })
+      res.status(200).json({ positions })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -28,7 +28,7 @@ exports.getOne = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ position })
+      res.status(200).json({ position })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -48,7 +48,7 @@ exports.create = async (req, res) => {
 
       const newPosition = await Position.create(req.body);
 
-      return res.status(201).json({
+      res.status(201).json({
          message: 'Position created',
          position: newPosition
       })
@@ -67,7 +67,7 @@ exports.update = async (req, res) => {
          })
       }
       const updatedPosition = await Position.findByIdAndUpdate(id, req.body, { new: true });
-      return res.status(200).json({ position: updatedPosition, message: 'Position updated' })
+      res.status(200).json({ position: updatedPosition, message: 'Position updated' })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -96,7 +96,7 @@ exports.delete = async (req, res) => {
 
       await Position.findByIdAndDelete(id);
 
-      return res.status(200).json({ message: 'Position deleted' })
+      res.status(200).json({ message: 'Position deleted' })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }

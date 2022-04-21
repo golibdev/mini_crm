@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ subcategories })
+      res.status(200).json({ subcategories })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -28,7 +28,7 @@ exports.getOne = async (req, res) => {
          })
       }
 
-      return res.status(200).json({ subcategory })
+      res.status(200).json({ subcategory })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
          }
       });
 
-      return res.status(201).json({ subcategory, message: 'Subcategory created' })
+      res.status(201).json({ subcategory, message: 'Subcategory created' })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -106,7 +106,7 @@ exports.update = async (req, res) => {
 
       await Subcategory.findByIdAndUpdate(id, req.body, { new: true });
 
-      return res.status(200).json({ subcategory, message: 'Subcategory updated' })
+      res.status(200).json({ subcategory, message: 'Subcategory updated' })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }
@@ -134,7 +134,7 @@ exports.delete = async (req, res) => {
 
       await Subcategory.findByIdAndDelete(id);
 
-      return res.status(200).json({ message: 'Subcategory deleted' })
+      res.status(200).json({ message: 'Subcategory deleted' })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }

@@ -6,7 +6,7 @@ export const Sidebar = ({ toggle, clickToggle }) => {
    const isMobile = useMediaQuery({ maxWidth: 1199 })
    const navLinkInfos = [
       {
-         title: 'Dashboard',
+         title: 'Bosh sahifa',
          link: '/admin',
          icon: 'fas fa-home'
       },
