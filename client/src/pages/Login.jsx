@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authApi } from '../api/authApi'
+import { adminApi } from '../api/adminApi'
 import { isAuthenticated } from '../handlers/auth'
 import { toast, ToastContainer } from 'react-toastify'
 
@@ -36,7 +36,7 @@ export const Login = () => {
       }
 
       try {
-         const res = await authApi.login(params)
+         const res = await adminApi.login(params)
          if(res.status === 200) {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('fullName', res.data.admin.fullName)

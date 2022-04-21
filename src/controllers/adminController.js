@@ -1,7 +1,7 @@
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
-const { Admin, NewsCount, Employee } = require('../models');
+const { Admin, NewsCount, Employee, Category, Subcategory, Position } = require('../models');
 
 exports.login = async (req, res) => {
    try {
@@ -52,6 +52,11 @@ exports.summary = async (req, res) => {
       const totalNewsCount = newsCounts.reduce((acc, curr) => {
          return acc + curr.newsCount
       }, 0)
+
+      const countEmployees = await Employee.countDocuments()
+      const countCategories = await Category.countDocuments()
+      const countSubCategories = await Subcategory.countDocuments()
+      const countPositions = await Position.countDocuments()
       
       // statistics by category
       if(req.query.daily) {
@@ -91,7 +96,10 @@ exports.summary = async (req, res) => {
          message: 'Summary',
          newsCounts,
          totalNewsCount,
-         statisticsByCategory
+         countEmployees,
+         countCategories,
+         countSubCategories,
+         countPositions
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
