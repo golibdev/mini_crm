@@ -40,6 +40,8 @@ export const Login = () => {
          if(res.status === 200) {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('fullName', res.data.admin.fullName)
+            localStorage.setItem('role', res.data.role)
+            localStorage.setItem('id', res.data.admin._id)
             toast.success("Biroz kuting")
             setTimeout(() => {
                window.location.reload()

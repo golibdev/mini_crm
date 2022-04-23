@@ -3,6 +3,7 @@ import { AppLayout } from './layouts/AppLayout'
 import { Category } from './pages/Category'
 import { Dashboard } from './pages/Dashboard'
 import { Employee } from './pages/Employee'
+import { EmployeeItem } from './pages/EmployeeItem'
 import { Login } from './pages/Login'
 import { Position } from './pages/Position'
 import { SubCategory } from './pages/SubCategory'
@@ -18,6 +19,8 @@ function App() {
           <Route path='/admin/categories' element={<Category/>} />
           <Route path='/admin/subcategories' element={<SubCategory/>} />
           <Route path='/admin/positions' element={<Position/>} />
+          <Route path='/admin/employee/:id' element={<EmployeeItem/>} />
+          <Route path='/admin/employee/add' element={<EmployeeItem/>} />
         </Route>
       </Routes>
     </BrowserRouter>

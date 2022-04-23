@@ -5,6 +5,6 @@ router.use('/employee/', require('./employeeRoute'));
 router.use('/position/', require('./positionRoute'));
 router.use('/category/', require('./categoryRoute'));
 router.use('/subcategory/', require('./subCategoryRoute'));
-router.use('/newsCount/', require('./newCountRoute'));
+router.use('/newscount/', require('./newCountRoute'));
 
 module.exports = router;

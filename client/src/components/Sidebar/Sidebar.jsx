@@ -4,7 +4,8 @@ import { useMediaQuery } from 'react-responsive'
 
 export const Sidebar = ({ toggle, clickToggle }) => {
    const isMobile = useMediaQuery({ maxWidth: 1199 })
-   const navLinkInfos = [
+   const role = localStorage.getItem('role')
+   const navLinkInfos = role === 'undefined' ? [
       {
          title: 'Bosh sahifa',
          link: '/admin',
@@ -29,6 +30,12 @@ export const Sidebar = ({ toggle, clickToggle }) => {
          title: "Lavozimlar",
          link: '/admin/positions',
          icon: 'fas fa-briefcase'
+      }
+   ] : [
+      {
+         title: 'Ma\'lumot qo\'shish',
+         link: '/admin/employee/add',
+         icon: 'fas fa-plus'
       }
    ]
    return (

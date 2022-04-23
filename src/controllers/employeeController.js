@@ -1,48 +1,48 @@
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
-const { Employee, Position, NewsCount } = require('../models');
+const { Employee, Position, NewsCount, Category, Subcategory } = require('../models');
 
-exports.login = async (req, res) => {
-   try {
-      const {
-         username,
-         password
-      } = req.body;
+// exports.login = async (req, res) => {
+//    try {
+//       const {
+//          username,
+//          password
+//       } = req.body;
 
-      const employee = await Employee.findOne({ username }) 
+//       const employee = await Employee.findOne({ username }) 
 
-      if (!employee) {
-         return res.status(401).json({
-            message: 'Invalid username or password'
-         })
-      }
+//       if (!employee) {
+//          return res.status(401).json({
+//             message: 'Invalid username or password'
+//          })
+//       }
 
-      const decryptedPassword = CryptoJS.AES.decrypt(
-         employee.password,
-         process.env.PASSWORD_SECRET_KEY
-      ).toString(CryptoJS.enc.Utf8);
+//       const decryptedPassword = CryptoJS.AES.decrypt(
+//          employee.password,
+//          process.env.PASSWORD_SECRET_KEY
+//       ).toString(CryptoJS.enc.Utf8);
 
-      if (password !== decryptedPassword) {
-         return res.status(401).json({
-            message: 'Invalid username or password'
-         })
-      }
+//       if (password !== decryptedPassword) {
+//          return res.status(401).json({
+//             message: 'Invalid username or password'
+//          })
+//       }
 
-      const token = jwt.sign({
-         id: employee._id,
-      }, process.env.JWT_SECRET_KEY)
+//       const token = jwt.sign({
+//          id: employee._id,
+//       }, process.env.JWT_SECRET_KEY)
 
-      return res.status(200).json({
-         message: 'Login successful',
-         token,
-         employee
-      })
-   } catch (err) {
-      console.log(err)
-      res.status(500).json({ err: err.message })
-   }
-}
+//       return res.status(200).json({
+//          message: 'Login successful',
+//          token,
+//          employee
+//       })
+//    } catch (err) {
+//       console.log(err)
+//       res.status(500).json({ err: err.message })
+//    }
+// }
 
 exports.register = async (req, res) => {
    try {
@@ -106,9 +106,18 @@ exports.getAll = async (req, res) => {
          })
       }
 
+      let totalEmployesNewsCount = 0;
+
+      employees.forEach(employee => {
+         employee.newsCounts.forEach(newsCount => {
+            totalEmployesNewsCount += newsCount.newsCount
+         })
+      })
+
       res.status(200).json({
          message: 'Get employees successful',
-         employees
+         employees,
+         totalEmployesNewsCount
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
@@ -127,9 +136,34 @@ exports.getOne = async (req, res) => {
          })
       }
 
+      // category data for news counts
+      const data = []
+      const category = await Category.find()
+      const subcategory = await Subcategory.find()
+      const newsCounts = employee.newsCounts
+
+      const summa = newsCounts.reduce((acc, cur) => {
+         return acc + cur.newsCount
+      }, 0)
+
+      for(let i=0; i < newsCounts.length; i++) {
+         const categoryData = category.find(item => item._id.toString() == newsCounts[i].category)
+         const subcategoryData = subcategory.find(item => item._id.toString() == newsCounts[i].subcategory)
+         data.push({
+            category: categoryData,
+            subcategory: subcategoryData,
+            newsCount: newsCounts[i].newsCount,
+            links: newsCounts[i].links,
+            createdAt: newsCounts[i].createdAt,
+            _id: newsCounts[i]._id
+         })
+      }
+
       res.status(200).json({
          message: 'Get employee successful',
-         employee
+         employee,
+         data,
+         summa
       })
    } catch (err) {
       res.status(500).json({ err: err.message })

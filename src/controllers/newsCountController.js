@@ -21,20 +21,20 @@ exports.create = async (req, res) => {
       const newNewsCount = await NewsCount.create(newsCountData)
 
       await Category.findByIdAndUpdate(category, {
-         $inc: {
-            newsCount: newsCount
+         $push: {
+            newsCount: newNewsCount._id
          }
       })
 
       await Subcategory.findByIdAndUpdate(subcategory, {
-         $inc: {
-            newsCount: newsCount
+         $push: {
+            newsCounts: newNewsCount._id
          }
       })
 
       await Employee.findByIdAndUpdate(employeeId, {
-         $inc: {
-            newsCount: newsCount
+         $push: {
+            newsCounts: newNewsCount._id
          }
       })
 

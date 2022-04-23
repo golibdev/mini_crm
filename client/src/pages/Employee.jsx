@@ -5,6 +5,7 @@ import { Loader } from '../components/Loader/Loader'
 import { PageTitle } from '../components/PageTitle/PageTitle'
 import { Pagination } from '../components/Paginate/Pagination'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom'
 
 export const Employee = () => {
    const [loading, setLoading] = useState(false)
@@ -121,6 +122,7 @@ const EmployeeList = ({ currentData, deleteEmployee, positions }) => {
                <th>F.I.SH</th>
                <th>UserName</th>
                <th>Lavozimi</th>
+               <th>Qo'shgan yangiliklar soni</th>
                <th>Action</th>
             </tr>
             {currentData.map((item, index) => (
@@ -129,17 +131,21 @@ const EmployeeList = ({ currentData, deleteEmployee, positions }) => {
                   <td>{item.fullName}</td>
                   <td>{item.username}</td>
                   <td>{item.positionId.name}</td>
+                  <td>{item.newsCounts.length}</td>
                   <td>
                      <div className='d-flex align-items-center justify-content-center'>
                         <button className='btn btn-primary text-white me-2' data-bs-toggle="offcanvas" data-bs-target={`#offcanvasRight${item._id}`} aria-controls="offcanvasRight">
                            <i className='fas fa-pen'></i>
                         </button>
                         <UpdateEmployee id={item._id} position={item} positions={positions} />
-                        <button className='btn btn-danger text-white' onClick={e => {
+                        <button className='btn btn-danger text-white me-2' onClick={e => {
                            deleteEmployee(e, item._id)
                         }}>
                            <i className='fas fa-trash-alt'></i>
                         </button>
+                        <Link to={`/admin/employee/${item._id}`} className='btn btn-success text-white'>
+                           <i className='fas fa-eye'></i>
+                        </Link>
                      </div>
                   </td>
                </tr>
@@ -179,14 +185,13 @@ const RegisterEmployee = ({ positions, getAll }) => {
       try {
          const res = await employeeApi.create(params)
 
-         itoast.success(res.data.message)
+         toast.success(res.data.message)
          setFullName('')
          setUsername('')
          setPassword('')
          setPositionId('')
          getAll()
       } catch (err) {
-         console.log(err.response);
          toast.error('Xatolik!')
       }
    }
@@ -272,7 +277,6 @@ const UpdateEmployee = ({ position, positions, id }) => {
             window.location.reload()
          }, 1500);
       } catch (err) {
-         console.log(err.response);
          toast.error('Xatolik!')
       }
    }

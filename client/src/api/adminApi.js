@@ -15,5 +15,9 @@ export const adminApi = {
    dailySummary: () => axios.get(
       baseUrl + 'summary?daily=true',
       { headers: { Authorization: `Bearer ${token}` } }
+   ),
+   ratingSummary: () => axios.get(
+      baseUrl + 'summary?rating=true',
+      { headers: { Authorization: `Bearer ${token}` } }
    )
 }

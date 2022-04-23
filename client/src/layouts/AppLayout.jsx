@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { Header } from '../components/Header/Header'
 import { Sidebar } from '../components/Sidebar/Sidebar'
@@ -9,6 +9,17 @@ export const AppLayout = () => {
    const navigate = useNavigate()
    const [toggle, setToggle] = useState(false)
    const [loading, setLoading] = useState(false)
+   const role = localStorage.getItem('role')
+
+   const location = useLocation()
+
+   if((location.pathname === '/admin' || 
+      location.pathname === '/admin/employees' || 
+      location.pathname === '/admin/categories' ||
+      location.pathname === '/admin/subcategories' || 
+      location.pathname === '/admin/positions') && role !== 'undefined') {
+      navigate('/admin/employee/add')
+   }
 
    useEffect(() => {
       const redirectAdminPanel = () => {
@@ -23,6 +34,7 @@ export const AppLayout = () => {
    const clickToggle = () => {
       setToggle(!toggle)
    }
+   
    return (
       <>
          <Header clickToggle={clickToggle} />
