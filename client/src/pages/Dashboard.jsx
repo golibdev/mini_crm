@@ -13,6 +13,7 @@ export const Dashboard = () => {
    const [categories, setCategories] = useState([])
    const [subcategories, setSubcategories] = useState([])
    const [employees, setEmployees] = useState([])
+   const [total, setTotal] = useState(0)
 
    const getData = async () => {
       try {
@@ -32,7 +33,6 @@ export const Dashboard = () => {
       getData()
    }, [])
 
-   console.log(subcategories);
    return (
       <div>
          {loading ? (
@@ -66,6 +66,9 @@ export const Dashboard = () => {
                                              <p className='fw-bold mb-0'>{category.name}</p>
                                           </td>
                                        ))}
+                                       <td rowSpan={2}>
+                                          <p className='fw-bold mb-0'>Jami</p>
+                                       </td>
                                     </tr>
                                     <tr>
                                        {subcategories.map((subcategory, index) => (
@@ -88,6 +91,11 @@ export const Dashboard = () => {
                                                 </p>
                                              </td>
                                           ))}
+                                          <td>
+                                             <p className='mb-0 fw-bold'>{
+                                                totalEmployesNewsCount
+                                             }</p>
+                                          </td>
                                        </tr>
                                     ))}
                                  </tbody>

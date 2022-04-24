@@ -108,16 +108,26 @@ exports.getAll = async (req, res) => {
 
       let totalEmployesNewsCount = 0;
 
-      employees.forEach(employee => {
-         employee.newsCounts.forEach(newsCount => {
-            totalEmployesNewsCount += newsCount.newsCount
+      const employeesData = []
+
+      for(let i=0; i < employees.length; i++) {
+         const employee = employees[i]
+         const newsCounts = employee.newsCounts
+         const summa = newsCounts.reduce((acc, cur) => {
+            return acc + cur.newsCount
+         }, 0)
+
+         totalEmployesNewsCount += summa
+
+         employeesData.push({
+            employee,
+            summa
          })
-      })
+      }
 
       res.status(200).json({
          message: 'Get employees successful',
-         employees,
-         totalEmployesNewsCount
+         eemployeesData,
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
