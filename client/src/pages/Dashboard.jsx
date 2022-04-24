@@ -25,6 +25,7 @@ export const Dashboard = () => {
          setCategories(resCategory.data.categories)
          setSubcategories(resSubcategory.data.data)
          setEmployees(resEmployee.data.employees)
+         console.log(resEmployee.data);
          setLoading(true)
       } catch (error) {}
    }
@@ -32,7 +33,6 @@ export const Dashboard = () => {
    useEffect(() => {
       getData()
    }, [])
-
    return (
       <div>
          {loading ? (

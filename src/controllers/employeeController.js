@@ -127,7 +127,7 @@ exports.getAll = async (req, res) => {
 
       res.status(200).json({
          message: 'Get employees successful',
-         eemployeesData,
+         employeesData,
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
