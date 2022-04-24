@@ -31,6 +31,8 @@ export const Dashboard = () => {
    useEffect(() => {
       getData()
    }, [])
+
+   console.log(subcategories);
    return (
       <div>
          {loading ? (

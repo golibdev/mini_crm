@@ -11,15 +11,17 @@ exports.getAll = async (req, res) => {
       }
 
       const data = []
-      const newsCounts = subcategories.newsCounts;
-      for(let i=0; i<newsCounts.length; i++) {
+      for(let i=0; i<subcategories.length; i++) {
          let summa = 0;
-         summa+= newsCounts[i].newsCount;
-         const subcategory = {
-            summa
+         for(let j=0; j<subcategories[i].newsCounts.length; j++) {
+            summa += subcategories[i].newsCounts[j].newsCount;
          }
-
-         data.push(subcategory)
+         data.push({
+            id: subcategories[i]._id,
+            name: subcategories[i].name,
+            category: subcategories[i].category.name,
+            count: summa
+         })
       }
 
       res.status(200).json({ subcategories, data })
