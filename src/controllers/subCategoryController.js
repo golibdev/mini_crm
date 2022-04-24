@@ -16,7 +16,7 @@ exports.getAll = async (req, res) => {
          let employees = []
          for(let j=0; j<subcategories[i].newsCounts.length; j++) {
             summa += subcategories[i].newsCounts[j].newsCount;
-            employees.push(subcategories[i].newsCounts[j].employeeId)
+            employees.push({id: subcategories[i].newsCounts[j].employeeId})
          }
          data.push({
             id: subcategories[i]._id,

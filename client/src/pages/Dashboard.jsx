@@ -83,7 +83,7 @@ export const Dashboard = () => {
                                              <td key={index}>  
                                                 <p className='mb-0 fw-bold'>
                                                    {
-                                                      employees.subcategories.find(subcategory => subcategory.id === item._id)
+                                                      item.employees.find(e => e.id === employee.id) ? item.count : 0
                                                    }
                                                 </p>
                                              </td>
