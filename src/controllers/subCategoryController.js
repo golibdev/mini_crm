@@ -11,10 +11,10 @@ exports.getAll = async (req, res) => {
       }
 
       const data = []
-
-      for(let i=0; i<subcategories.length; i++) {
+      const newsCounts = subcategories.newsCounts;
+      for(let i=0; i<newsCounts.length; i++) {
          let summa = 0;
-         summa+= subcategories[i].newsCounts.newsCount;
+         summa+= newsCounts[i].newsCount;
          const subcategory = {
             summa
          }
