@@ -10,7 +10,19 @@ exports.getAll = async (req, res) => {
          })
       }
 
-      res.status(200).json({ subcategories })
+      const data = []
+
+      for(let i=0; i<subcategories.length; i++) {
+         let summa = 0;
+         summa+= subcategories[i].newsCounts.newsCount;
+         const subcategory = {
+            summa
+         }
+
+         data.push(subcategory)
+      }
+
+      res.status(200).json({ subcategories, data })
    } catch (err) {
       res.status(500).json({ err: err.message })
    }

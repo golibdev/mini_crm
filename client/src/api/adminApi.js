@@ -1,7 +1,7 @@
 const token = localStorage.getItem('token');
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:4000/api/admin/';
+const baseUrl = 'https://effectapi.serius.uz/api/admin/';
 
 export const adminApi = {
    login: (params) => axios.post(

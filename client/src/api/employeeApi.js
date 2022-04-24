@@ -1,7 +1,7 @@
 const token = localStorage.getItem('token');
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:4000/api/employee/';
+const baseUrl = 'https://effectapi.serius.uz/api/employee/';
 
 export const employeeApi = {
    getAll: () => axios.get(
