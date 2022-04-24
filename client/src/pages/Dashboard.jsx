@@ -22,7 +22,7 @@ export const Dashboard = () => {
          const resEmployee = await employeeApi.getAll()
          setData(res.data)
          setCategories(resCategory.data.categories)
-         setSubcategories(resSubcategory.data.subcategories)
+         setSubcategories(resSubcategory.data.data)
          setEmployees(resEmployee.data.employees)
          setLoading(true)
       } catch (error) {}
@@ -82,11 +82,9 @@ export const Dashboard = () => {
                                           {subcategories.map((item, index) => (
                                              <td key={index}>  
                                                 <p className='mb-0 fw-bold'>
-                                                   {item.newsCounts.map((newsCount, index) => (
-                                                      <span key={index}>
-                                                         {newsCount.employeeId === employee._id ? newsCount.newsCount : null}
-                                                      </span>
-                                                   ))}
+                                                   {
+                                                      employees.subcategories.find(subcategory => subcategory.id === item._id)
+                                                   }
                                                 </p>
                                              </td>
                                           ))}

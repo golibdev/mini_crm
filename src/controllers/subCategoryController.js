@@ -20,7 +20,8 @@ exports.getAll = async (req, res) => {
             id: subcategories[i]._id,
             name: subcategories[i].name,
             category: subcategories[i].category.name,
-            count: summa
+            count: summa,
+            employees: subcategories[i].employees
          })
       }
 
