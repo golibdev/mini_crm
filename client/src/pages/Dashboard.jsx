@@ -24,8 +24,7 @@ export const Dashboard = () => {
          setData(res.data)
          setCategories(resCategory.data.categories)
          setSubcategories(resSubcategory.data.data)
-         setEmployees(resEmployee.data.employees)
-         console.log(resEmployee.data);
+         setEmployees(resEmployee.data.employeesData)
          setLoading(true)
       } catch (error) {}
    }
@@ -80,21 +79,19 @@ export const Dashboard = () => {
                                     {employees.map((employee, index) => (
                                        <tr key={index}>
                                           <td>
-                                             <p className='fw-bold mb-0'>{employee.fullName}</p>
+                                             <p className='fw-bold mb-0'>{employee.employee.fullName}</p>
                                           </td>
                                           {subcategories.map((item, index) => (
                                              <td key={index}>  
                                                 <p className='mb-0 fw-bold'>
                                                    {
-                                                      item.employees.find(e => e.id === employee.id) ? item.count : 0
+                                                      item.employees.find(e => e.id === employee.employee._id) ? item.count : 0
                                                    }
                                                 </p>
                                              </td>
                                           ))}
                                           <td>
-                                             <p className='mb-0 fw-bold'>{
-                                                totalEmployesNewsCount
-                                             }</p>
+                                             <p className='mb-0 fw-bold'>{employee.summa}</p>
                                           </td>
                                        </tr>
                                     ))}

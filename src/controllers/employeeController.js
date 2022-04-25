@@ -116,7 +116,6 @@ exports.getAll = async (req, res) => {
          const summa = newsCounts.reduce((acc, cur) => {
             return acc + cur.newsCount
          }, 0)
-
          totalEmployesNewsCount += summa
 
          employeesData.push({
@@ -128,6 +127,7 @@ exports.getAll = async (req, res) => {
       res.status(200).json({
          message: 'Get employees successful',
          employeesData,
+         employees
       })
    } catch (err) {
       res.status(500).json({ err: err.message })
