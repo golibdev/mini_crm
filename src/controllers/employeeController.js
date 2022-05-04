@@ -1,48 +1,7 @@
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
-const { Employee, Position, NewsCount, Category, Subcategory } = require('../models');
-
-// exports.login = async (req, res) => {
-//    try {
-//       const {
-//          username,
-//          password
-//       } = req.body;
-
-//       const employee = await Employee.findOne({ username }) 
-
-//       if (!employee) {
-//          return res.status(401).json({
-//             message: 'Invalid username or password'
-//          })
-//       }
-
-//       const decryptedPassword = CryptoJS.AES.decrypt(
-//          employee.password,
-//          process.env.PASSWORD_SECRET_KEY
-//       ).toString(CryptoJS.enc.Utf8);
-
-//       if (password !== decryptedPassword) {
-//          return res.status(401).json({
-//             message: 'Invalid username or password'
-//          })
-//       }
-
-//       const token = jwt.sign({
-//          id: employee._id,
-//       }, process.env.JWT_SECRET_KEY)
-
-//       return res.status(200).json({
-//          message: 'Login successful',
-//          token,
-//          employee
-//       })
-//    } catch (err) {
-//       console.log(err)
-//       res.status(500).json({ err: err.message })
-//    }
-// }
+const { Employee, Position, NewsCount, Category, Subcategory, Task } = require('../models');
 
 exports.register = async (req, res) => {
    try {
@@ -92,7 +51,7 @@ exports.register = async (req, res) => {
          employee: newEmployee
       })
    } catch (err) {
-      res.status(500).json({ err: err.message })
+      res.status(500).json({ message: err.message })
    }
 }
 
@@ -120,7 +79,8 @@ exports.getAll = async (req, res) => {
 
          employeesData.push({
             employee,
-            summa
+            summa,
+            totalEmployesNewsCount
          })
       }
 
@@ -130,7 +90,7 @@ exports.getAll = async (req, res) => {
          employees
       })
    } catch (err) {
-      res.status(500).json({ err: err.message })
+      res.status(500).json({ message: err.message })
    }
 }
 
@@ -176,7 +136,64 @@ exports.getOne = async (req, res) => {
          summa
       })
    } catch (err) {
-      res.status(500).json({ err: err.message })
+      res.status(500).json({ message: err.message })
+   }
+}
+
+exports.fromDateAndToDate = async (req, res) => {
+   try {
+      const id = req.params.id;
+
+      const employee = await Employee.findById(id).populate('positionId').populate('newsCounts');
+
+      if(!employee) {
+         return res.status(404).json({
+            message: 'Employee not found'
+         })
+      }
+
+      const {start, end} = req.query
+
+      const newsCount = await NewsCount.find({
+         createdAt: {
+            $gte: start,
+            $lte: end || new Date()
+         }
+      }).populate('category').populate('subcategory')
+
+
+      if(!newsCount) {
+         return res.status(404).json({
+            message: 'No news found'
+         })
+      }
+
+      const data = []
+      const category = await Category.find()
+      const subcategory = await Subcategory.find()
+
+      for(let i=0; i < newsCount.length; i++) {
+         const categoryData = category.find(item => item._id.toString() == newsCount[i].category._id)
+         const subcategoryData = subcategory.find(item => item._id.toString() == newsCount[i].subcategory._id)
+         data.push({
+            category: categoryData,
+            subcategory: subcategoryData,
+            newsCount: newsCount[i].newsCount,
+            links: newsCount[i].links,
+            createdAt: newsCount[i].createdAt,
+            _id: newsCount[i]._id
+         })
+      }
+
+      res.status(200).json({
+         message: 'Get news successful',
+         data,
+         summa: data.reduce((acc, cur) => {
+            return acc + cur.newsCount
+         }, 0)
+      })
+   } catch (err) {
+      return res.status(500).json({ message: err.message })   
    }
 }
 
@@ -253,7 +270,7 @@ exports.update = async (req, res) => {
          message: "Update employee successful"
       })
    } catch (err) {
-      res.status(500).json({ err: err.message })
+      res.status(500).json({ message: err.message })
    }
 }
 
@@ -286,6 +303,27 @@ exports.delete = async (req, res) => {
          message: 'Delete employee successful'
       })
    } catch (err) {
-      res.status(500).json({ err: err.message })
+      res.status(500).json({ message: err.message })
+   }
+}
+
+exports.getTasks = async (req, res) => {
+   try {
+      const id = req.params.id;
+
+      const employee = await Employee.findById(id).populate('tasks');
+
+      if(!employee) {
+         return res.status(404).json({
+            message: 'Employee not found'
+         })
+      }
+
+      res.status(200).json({
+         message: 'Get tasks successful',
+         tasks: employee.tasks
+      })
+   } catch (err) {
+      res.status(500).json({ message: err.message })
    }
 }

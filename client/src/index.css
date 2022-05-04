@@ -19,4 +19,8 @@ tr {
   .toggle-sidebar-btn {
     display: block !important;
   }
+
+  table {
+    width: 850px !important;
+  }
 }

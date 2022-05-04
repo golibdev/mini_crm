@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { employeeApi } from '../api/employeeApi'
 import { positionApi } from '../api/positionApi'
+import { taskApi } from '../api/taskApi'
 import { Loader } from '../components/Loader/Loader'
 import { PageTitle } from '../components/PageTitle/PageTitle'
 import { Pagination } from '../components/Paginate/Pagination'
@@ -19,7 +20,7 @@ export const Employee = () => {
       try {
          const res = await employeeApi.getAll()
          const resPositions = await positionApi.getAll()
-         setData(res.data.employees)
+         setData(res.data.employeesData)
          setPositions(resPositions.data.positions)
          setLoading(true)
       } catch (err) {}
@@ -33,7 +34,7 @@ export const Employee = () => {
    const indexOfFirstData = indexOfLastData - perPage;
    const currentData = data.slice(indexOfFirstData, indexOfLastData);
 
-   const filter = data.filter(item => item.fullName.toLowerCase().includes(search.toLowerCase()))
+   const filter = data.filter(item => item.employee.fullName.toLowerCase().includes(search.toLowerCase()))
 
    const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
@@ -53,12 +54,16 @@ export const Employee = () => {
       <div>
          {loading ? (
             <>
-               <div className='d-flex align-items-center justify-content-between'>
-                  <PageTitle  title={'Hodimlar'} />
-                  <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                     <i className='fas fa-plus-circle'></i>
-                  </button>
-                  <RegisterEmployee positions={positions} getAll={getAll} />
+               <div className="card">
+                  <div className="card-header pb-0">
+                     <div className='d-flex align-items-center justify-content-between'>
+                        <PageTitle  title={'Hodimlar'} />
+                        <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                           <i className='fas fa-plus-circle'></i>
+                        </button>
+                        <RegisterEmployee positions={positions} getAll={getAll} />
+                     </div>
+                  </div>
                </div>
                <div className="row">
                   <div className="col-12">
@@ -66,7 +71,7 @@ export const Employee = () => {
                         <div className="card-header">
                            <input type="text" placeholder='Qidirish...' className='form-control' value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
-                        <div className="card-body">
+                        <div className="card-body pt-3 pb-3">
                            <div className="table-responsive">
                               {data.length > 0 ? (
                                  <>
@@ -128,23 +133,30 @@ const EmployeeList = ({ currentData, deleteEmployee, positions }) => {
             {currentData.map((item, index) => (
                <tr key={index} className="fw-bold">
                   <td>{index + 1}</td>
-                  <td>{item.fullName}</td>
-                  <td>{item.username}</td>
-                  <td>{item.positionId.name}</td>
-                  <td>{item.newsCounts.length}</td>
+                  <td>{item.employee.fullName}</td>
+                  <td>{item.employee.username}</td>
+                  <td>{item.employee.positionId.name}</td>
+                  <td>{item.summa}</td>
                   <td>
                      <div className='d-flex align-items-center justify-content-center'>
-                        <button className='btn btn-primary text-white me-2' data-bs-toggle="offcanvas" data-bs-target={`#offcanvasRight${item._id}`} aria-controls="offcanvasRight">
+                        <button className='btn btn-primary text-white me-2' data-bs-toggle="offcanvas" data-bs-target={`#offcanvasRight${item.employee._id}`} aria-controls="offcanvasRight">
                            <i className='fas fa-pen'></i>
                         </button>
-                        <UpdateEmployee id={item._id} position={item} positions={positions} />
+                        <UpdateEmployee id={item.employee._id} position={item} positions={positions} />
                         <button className='btn btn-danger text-white me-2' onClick={e => {
-                           deleteEmployee(e, item._id)
+                           deleteEmployee(e, item.employee._id)
                         }}>
                            <i className='fas fa-trash-alt'></i>
                         </button>
-                        <Link to={`/admin/employee/${item._id}`} className='btn btn-success text-white'>
+                        <Link to={`/admin/employee/${item.employee._id}`} className='btn btn-success text-white me-2'>
                            <i className='fas fa-eye'></i>
+                        </Link>
+                        <button className='btn btn-warning me-2 text-white' data-bs-toggle="offcanvas" data-bs-target={`#sendTask${item.employee._id}`} aria-controls="offcanvasRight">
+                           <i className='fas fa-envelope'></i>
+                        </button>
+                        <SendTask id={item.employee._id} item={item} />
+                        <Link to={`/admin/task/employee/${item.employee._id}`} className='btn btn-secondary'>
+                           <i className='fas fa-tasks'></i>
                         </Link>
                      </div>
                   </td>
@@ -237,10 +249,10 @@ const RegisterEmployee = ({ positions, getAll }) => {
 }
 
 const UpdateEmployee = ({ position, positions, id }) => {
-   const [fullName, setFullName] = useState(position.fullName)
-   const [username, setUsername] = useState(position.username)
+   const [fullName, setFullName] = useState(position.employee.fullName)
+   const [username, setUsername] = useState(position.employee.username)
    const [password, setPassword] = useState('')
-   const [positionId, setPositionId] = useState(position.positionId._id)
+   const [positionId, setPositionId] = useState(position.employee.positionId._id)
 
    const handleSubmit = async (e) => {
       e.preventDefault()
@@ -285,7 +297,7 @@ const UpdateEmployee = ({ position, positions, id }) => {
       <div className="offcanvas offcanvas-end" tabIndex="-1" id={`offcanvasRight${id}`} aria-labelledby="offcanvasRightLabel">
          <div className="offcanvas-header">
             <h4 id="offcanvasRightLabel" className='card-title'>
-               Yangi hodim ro'yxatdan o'tkazish
+               Hodim ma'lumotlarini tahrirlash
             </h4>
             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
          </div>
@@ -315,6 +327,61 @@ const UpdateEmployee = ({ position, positions, id }) => {
                <button className='btn btn-success d-block'>
                   <i className='fas fa-pen me-2'></i>
                   Saqlash
+               </button>
+            </form>
+         </div>
+      </div>
+   )
+}
+
+const SendTask = ({ id, item }) => {
+   const [task, setTask] = useState('')
+
+   const handleSubmit = async (e) => {
+      e.preventDefault()
+      const check = {
+         task: task.trim().length === 0
+      }
+
+      if(check.task) {
+         toast.error('Maydonlarni to\'ldirish shart!')
+         return
+      }
+
+      const params = {
+         task,
+         employee: id
+      }
+
+      try {
+         const res = await taskApi.create(params)
+         toast.success(res.data.message)
+
+         setTimeout(() => {
+            window.location.reload()
+         }, 1500);
+      } catch (err) {
+         console.log(err.response);
+         toast.error(err.response.data.message)
+      }
+   }
+   return (
+      <div className="offcanvas offcanvas-end" tabIndex="-1" id={`sendTask${id}`} aria-labelledby="offcanvasRightLabel">
+         <div className="offcanvas-header">
+            <h4 id="offcanvasRightLabel" className='card-title pb-0 '>
+               {item.employee.fullName} ga vazifa yuborish
+            </h4>
+            <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+         </div>
+         <div className="offcanvas-body">
+            <form onSubmit={handleSubmit}>
+               <div className='mb-3'>
+                  <label htmlFor="task" className='card-title mb-0 pt-0 d-block text-start'>Vazifa</label>
+                  <textarea className="form-control" id="task" rows="15" placeholder="Vazifani yozing" value={task} onChange={e => setTask(e.target.value)} />
+               </div>
+               <button className='btn btn-primary d-block'>
+                  <i className='fas fa-pen me-2'></i>
+                  Yuborish
                </button>
             </form>
          </div>

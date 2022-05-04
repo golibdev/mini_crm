@@ -46,12 +46,16 @@ export const Category = () => {
       <div>
          {loading ? (
             <>
-               <div className='d-flex align-items-center justify-content-between'>
-                  <PageTitle title={'Kategoriya'} />
-                  <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                     <i className='fas fa-plus-circle'></i>
-                  </button>
-                  <CreateCategory getAll={getAll} />
+               <div className="card">
+                  <div className="card-header pb-0">
+                     <div className='d-flex align-items-center justify-content-between'>
+                        <PageTitle title={'Kategoriya'} />
+                        <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                           <i className='fas fa-plus-circle'></i>
+                        </button>
+                        <CreateCategory getAll={getAll} />
+                     </div>
+                  </div>
                </div>
                <div className="row">
                   <div className="col-12">

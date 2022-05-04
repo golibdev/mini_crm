@@ -15,10 +15,11 @@ export const EmployeeItem = () => {
    const [loading, setLoading] = useState(false)
    const [user, setUser] = useState({})
    const [data, setData] = useState([])
-   const [search, setSearch] = useState('')
    const [currentPage, setCurrentPage] = useState(1)
    const [perPage] = useState(10)
    const [summa, setSumma] = useState(0)
+   const [start, setStart] = useState('')
+   const [end, setEnd] = useState('')
 
    const getAll = async () => {
       try {
@@ -30,9 +31,24 @@ export const EmployeeItem = () => {
       } catch (err) {}
    }
 
+   const filterDate = async (e) => {
+      e.preventDefault()
+      try {
+         const startDate = new Date(start)
+         const endDate = new Date(end)
+         if(startDate.getTime() > endDate.getTime()) {
+            toast.error('Bu tarzda filterlash mumkin emas')
+            return
+         }
+         const res = await employeeApi.getByDate(id, start, end)
+         setData(res.data.data.reverse());
+         setSumma(res.data.summa)
+      } catch (err) {}
+   }
+
    useEffect(() => {
       getAll()
-   }, [])
+   }, [start, end])
 
    const indexOfLastData = currentPage * perPage;
    const indexOfFirstData = indexOfLastData - perPage;
@@ -55,25 +71,50 @@ export const EmployeeItem = () => {
       <div>
          {loading ? (
             <>
-               <div className='d-flex align-items-center justify-content-between'>
-                  <PageTitle title={user.fullName} />
-                  {role !== 'undefined' && (
-                     <>
-                        <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                           <i className='fas fa-plus-circle'></i>
-                        </button>
-                        <AddData />
-                     </>
-                  )}
+               <div className="card">
+                  <div className="card-header pb-2">
+                     <div className='d-flex align-items-center justify-content-between'>
+                        <PageTitle title={user.fullName} />
+                        {role !== 'undefined' && (
+                           <>
+                              <button className='btn btn-primary' data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                 <i className='fas fa-plus-circle'></i>
+                              </button>
+                              <AddData />
+                           </>
+                        )}
+                     </div>
+                  </div>
                </div>
                <div className="row">
                   <div className="col-12">
                      <div className="card">
-                        <div className="card-header">
-                           <h4 className="card-title">
-                              <i className="fas fa-user-tie me-3"></i>
-                              {user.fullName}
-                           </h4>
+                        <div className="card-header pb-2 pt-2">
+                           <div className="accordion" id="accordionExample">
+                              <h5 type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" className='card-title pb-0 pt-2'>
+                                 <i className="fas fa-filter me-2"></i>
+                                 Filter
+                              </h5>
+                              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                 <div className="accordion-body">
+                                    <div className='row'>
+                                       <div className="col-lg-5 col-md-5 col-12 mb-3">
+                                          <label htmlFor="start" className='card-title pb-0 pt-0'>Dan</label>
+                                          <input type={'datetime-local'} className='form-control' value={start} onChange={e => setStart(e.target.value)} />
+                                       </div>
+                                       <div className="col-lg-5 col-md-5 col-12 mb-3">
+                                          <label htmlFor="end" className='card-title pb-0 pt-0'>Gacha</label>
+                                          <input type={"datetime-local"} className='form-control' value={end} onChange={e => setEnd(e.target.value)} />
+                                       </div>
+                                       <div className="col-12">
+                                          <button className='btn btn-primary d-block' onClick={filterDate}>
+                                             <i className='fas fa-filter'></i>
+                                          </button>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
                         <div className="card-body">
                            <div className="table-responsive">
@@ -86,7 +127,7 @@ export const EmployeeItem = () => {
                                  <div className='text-center'>
                                     <h3 className='card-title'>
                                        <i className='fas fa-exclamation-circle me-2'></i>
-                                       Hodimlar mavjud emas
+                                       Ma'lumotlar mavjud emas
                                     </h3>
                                  </div>
                               )}
@@ -112,8 +153,8 @@ const EmployeeItemList = ({ currentData, summa, deleteData }) => {
                <th>Kategoriya</th>
                <th>Ichki kategoriya</th>
                <th>Yangiliklar soni</th>
-               <th>Links</th>
                <th>Vaqti</th>
+               <th>Links</th>
                <th>O'chirish</th>
             </tr>
             {currentData.map((item, index) => (
@@ -122,12 +163,13 @@ const EmployeeItemList = ({ currentData, summa, deleteData }) => {
                  <td>{item.category.name}</td>
                  <td>{item.subcategory.name}</td>
                  <td>{item.newsCount}</td>
-                 <td>
-                     <a className='text-primary' href={item.links} target='_blank' rel="noopener noreferrer">
-                        <i className='fas fa-link'></i>
-                     </a>
-                 </td>
                  <td>{moment(item.createdAt).format('DD.MM.YYYY HH:mm:ss')}</td>
+                 <td>
+                     <button className='btn btn-primary' data-bs-toggle="modal" data-bs-target={`#exampleModal${index}`}>
+                        <i className='fas fa-link'></i>
+                     </button>
+                     <LinksModal index={index} links={item.links} />
+                 </td>
                  <td>
                      <button className='btn btn-danger' onClick={(e) => {
                         deleteData(e, item._id)
@@ -140,7 +182,7 @@ const EmployeeItemList = ({ currentData, summa, deleteData }) => {
          </tbody>
          <tfoot>
             <tr>
-               <td colSpan='5'>
+               <td colSpan='7'>
                   <h4 className='text-start fw-bold'>
                      Jami: {summa} ta
                   </h4>
@@ -253,6 +295,40 @@ const AddData = () => {
                   Qo'shish
                </button>
             </form>
+         </div>
+      </div>
+   )
+}
+
+const LinksModal = ({ links, index }) => {
+   const [linksArray, setLinksArray] = useState([])
+
+   useEffect(() => {
+      setLinksArray(links.split('\n'))
+   }, [links])
+   return (
+      <div className="modal fade" id={`exampleModal${index}`} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+               <div className="modal-header">
+                  <h5 className="modal-title card-title pb-0 pt-0" id="exampleModalLabel">
+                     {linksArray.length} ta havolalar
+                  </h5>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div className="modal-body">
+                  <ul className='list-group'>
+                     {linksArray.map((link, index) => (
+                        <li key={index} className='list-group-item'>
+                           <a href={link} target='_blank' rel='noopener noreferrer' className='d-block text-start card-title pb-0 pt-0' style={{ fontSize: '14px' }}> <i className='fas fa-link me-2'></i>{index+1}. {link}</a>
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+               <div className="modal-footer">
+                  <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Yopish</button>
+               </div>
+            </div>
          </div>
       </div>
    )

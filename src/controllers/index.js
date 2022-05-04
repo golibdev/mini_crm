@@ -5,4 +5,5 @@ module.exports = {
    categoryController: require('./categoryController'),
    subCategoryController: require('./subCategoryController'),
    newsCountController: require('./newsCountController'),
+   taskController: require('./taskController')
 }

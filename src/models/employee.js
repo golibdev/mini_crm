@@ -23,6 +23,10 @@ const employeeSchema = new mongoose.Schema({
    newsCounts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'NewsCount'
+   }],
+   tasks: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task'
    }]
 }, schemaOptions)
 

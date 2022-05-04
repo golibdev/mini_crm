@@ -4,5 +4,6 @@ module.exports = {
    Subcategory: require('./subcategory'),
    Employee: require('./employee'),
    Position: require('./position'),
-   NewsCount: require('./newsCount')
+   NewsCount: require('./newsCount'),
+   Task: require('./task'),
 }

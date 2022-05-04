@@ -13,7 +13,6 @@ export const Dashboard = () => {
    const [categories, setCategories] = useState([])
    const [subcategories, setSubcategories] = useState([])
    const [employees, setEmployees] = useState([])
-   const [total, setTotal] = useState(0)
 
    const getData = async () => {
       try {
@@ -36,8 +35,12 @@ export const Dashboard = () => {
       <div>
          {loading ? (
             <>
-               <div className='d-flex align-items-center justify-content-between'>
-                  <PageTitle title={'Dashboard'} />
+               <div className="card">
+                  <div className="card-header pb-0">
+                     <div className='d-flex align-items-center justify-content-between'>
+                        <PageTitle title={'Dashboard'} />
+                     </div>
+                  </div>
                </div>
                <div className='row'>
                   <CardSatistics title={`Hodimlar soni`} data={data.countEmployees} />

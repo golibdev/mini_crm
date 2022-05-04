@@ -1,7 +1,7 @@
 const token = localStorage.getItem('token');
 import axios from 'axios';
 
-const baseUrl = 'https://effectapi.serius.uz/api/category/';
+const baseUrl = 'http://localhost:4000/api/category/';
 
 export const categoryApi = {
    getAll: () => axios.get(

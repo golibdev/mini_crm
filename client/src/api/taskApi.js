@@ -1,9 +1,9 @@
 const token = localStorage.getItem('token');
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:4000/api/position/';
+const baseUrl = 'http://localhost:4000/api/task/';
 
-export const positionApi = {
+export const taskApi = {
    getAll: () => axios.get(
       baseUrl,
       { headers: { Authorization: `Bearer ${token}` } }
@@ -17,13 +17,12 @@ export const positionApi = {
       params,
       { headers: { Authorization: `Bearer ${token}` } }
    ),
-   update: (id, params) => axios.put(
-      baseUrl + id,
-      params,
-      { headers: { Authorization: `Bearer ${token}` } }
-   ),
    delete: (id) => axios.delete(
       baseUrl + id,
+      { headers: { Authorization: `Bearer ${token}` } }
+   ),
+   changeStatus: (id) => axios.put(
+      baseUrl + 'change-status/' + id,
       { headers: { Authorization: `Bearer ${token}` } }
    )
 }

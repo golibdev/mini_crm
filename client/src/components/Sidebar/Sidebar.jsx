@@ -1,10 +1,11 @@
 import React, {  } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useMediaQuery } from 'react-responsive'
 
 export const Sidebar = ({ toggle, clickToggle }) => {
    const isMobile = useMediaQuery({ maxWidth: 1199 })
    const role = localStorage.getItem('role')
+   const location = useLocation().pathname
    const navLinkInfos = role === 'undefined' ? [
       {
          title: 'Bosh sahifa',
@@ -36,6 +37,11 @@ export const Sidebar = ({ toggle, clickToggle }) => {
          title: 'Ma\'lumot qo\'shish',
          link: '/admin/employee/add',
          icon: 'fas fa-plus'
+      },
+      {
+         title: 'Vazifalar',
+         link: '/admin/employee/task',
+         icon: 'fas fa-tasks'
       }
    ]
    return (
@@ -45,10 +51,12 @@ export const Sidebar = ({ toggle, clickToggle }) => {
             <ul className="sidebar-nav" id="sidebar-nav">
 
                {navLinkInfos.map(item => (
-                  <li className="nav-item" key={item.link}>
-                     <Link className="nav-link " to={item.link} onClick={isMobile && clickToggle}>
-                        <i className={item.icon}></i>
-                        <span>{item.title}</span>
+                  <li className={'nav-item'} key={item.link}>
+                     <Link className={location === item.link ? `nav-link pb-0 bg-primary` : 'nav-link pb-0'} to={item.link} onClick={isMobile && clickToggle}>
+                        <span className={'card-title pb-0 pt-0'}>
+                           <i className={location === item.link ? `${item.icon} text-white` : `${item.icon}`}></i>
+                        </span>
+                        <span className={location === item.link ? 'text-white card-title pb-0 pt-0': 'card-title pb-0 pt-0'}>{item.title}</span>
                      </Link>
                   </li>
                ))}
